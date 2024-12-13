@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje del Receptor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fefefe;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            background-size: cover;
+        }
+
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modalContent {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in-out;
+            background-image: url('https://www.transparenttextures.com/patterns/diagonal-stripes.png');
+            background-size: 30px;
+            border: 5px solid #ff4b5c;
+        }
+
+        #modalMessage {
+            font-size: 24px;
+            color: #e60000;
+            font-weight: bold;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ff595e, #ffac41);
+            color: white;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            animation: heartbeat 1.2s infinite;
+        }
+
+        button {
+            background-color: #ff4b5c;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #e63946;
+        }
+
+        audio {
+            display: none;
+        }
+
+        #audioControls {
+            margin-top: 20px;
+            display: none;
+        }
+
+        #audioControls input[type="range"] {
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="modal">
+        <div id="modalContent">
+            <p id="modalMessage">¡Hola, Juan! Tienes un mensaje importante.</p>
+            <button id="musicButton" onclick="startMusic()">Escuchar Música</button>
+            <!-- Controles de audio que aparecen después de hacer clic en el botón -->
+            <div id="audioControls">
+                <audio id="backgroundMusic" loop>
+                    <source src="mp3/navi.mp3" type="audio/mp3">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+                <div>
+                    <button onclick="toggleAudio()">Pausar Música</button>
+                </div>
+                <div>
+                    <input type="range" id="volumeControl" value="100" max="100" onchange="changeVolume(event)">
+                    <label for="volumeControl">Volumen</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const musicButton = document.getElementById('musicButton');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const audioControls = document.getElementById('audioControls');
+        const volumeControl = document.getElementById('volumeControl');
+        let isPlaying = false;
+
+        // Inicia la música y muestra los controles
+        function startMusic() {
+            backgroundMusic.play();
+            audioControls.style.display = 'block';  // Muestra los controles de audio
+            musicButton.style.display = 'none';  // Oculta el botón de "Escuchar Música"
+            isPlaying = true;
+        }
+
+        // Alterna entre reproducir y pausar la música
+        function toggleAudio() {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                document.querySelector("#audioControls button").textContent = 'Reproducir Música';
+            } else {
+                backgroundMusic.play();
+                document.querySelector("#audioControls button").textContent = 'Pausar Música';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Cambia el volumen
+        function changeVolume(event) {
+            backgroundMusic.volume = event.target.value / 100;
+        }
+
+        // Mostrar el modal con el mensaje personalizado
+        const urlParams = new URLSearchParams(window.location.search);
+        const receiver = urlParams.get('receptor');
+
+        if (receiver) {
+            const modal = document.getElementById('modal');
+            const modalMessage = document.getElementById('modalMessage');
+            modalMessage.textContent = `¡Holii te acaba de tocar ${receiver}`;
+            modal.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
